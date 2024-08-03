@@ -47,7 +47,7 @@ header a{
   border-radius: 4px;
   margin: 20px auto;
   padding: 20px;
-  position: revlative;
+  position: relative;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 
 }
@@ -61,6 +61,7 @@ header a{
 .todo-details p{
   font-size: 0.9 rem;
   margin-bottom: 10px;
+
 }
 .todo-details .taskType{
   font-size: 0.9 rem;
@@ -109,12 +110,29 @@ form button{
   margin: 20px 0;
   padding: 10px;
 }
-/* .todo-details span{
-  position: absolute;
-  top: 20px;
-  cursor: pointer;
-  background: #f1f1f1;
-  padding: 6px;
-  border-radius: 50%;
-  color: #333;
-} */
+.todo-details .delete-button,
+.todo-details .edit-button {
+    position: absolute;
+    top: 20px;
+    cursor: pointer;
+    background: #f1f1f1;
+    padding: 6px;
+    border-radius: 50%;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.todo-details .delete-button {
+    right: 20px;
+}
+
+.todo-details .edit-button {
+    right: 60px; 
+}
+
+.todo-details svg {
+    width: 20px;
+    height: 20px;
+}

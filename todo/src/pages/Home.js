@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TodoDetails from "../components/TodoDetails";
 import TodoForm from "../components/TodoForm";
+import { useTodoContext } from "../hooks/useTodoContext";
+
 
 const Home = () => {
-    const [todos, setTodos] = useState(null);
+    const {todos, dispatch} = useTodoContext();
+
     useEffect(() =>{
 
         const fetchData = async () => {
@@ -11,10 +14,8 @@ const Home = () => {
             const data = await response.json();
 
             if(response.ok){
-                setTodos(data)
-            } else{
-                console.log(response)
-            }
+                dispatch({type: 'GET_TODOS', payload: data})
+            } 
         }
         fetchData();
     }, [])

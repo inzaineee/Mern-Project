@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useTodoContext } from "../hooks/useTodoContext";
 
 
 const TodoForm = () => {
+    const { dispatch } = useTodoContext();
+
     const [title, setTitle] = useState('');
     const [time, setTime] = useState('');
     const [completed, setCompleted] = useState(false);
@@ -21,14 +24,16 @@ const TodoForm = () => {
         });
         
         const data = await response.json();
-        if(!data.ok){
+        if(!response.ok){
             setError(data.message);
         }
-        if(data.ok){
+        if(response.ok){
+            
             setTitle('');
             setTime('');
             setCompleted(false);
             setError(null);
+            dispatch({type: 'CREATE_TODO', payload: data});
         }
     }
 
@@ -49,8 +54,6 @@ const TodoForm = () => {
                 value = {time}
                 onChange={(e) => setTime(e.target.value)}
             />
-
-
            
             <button>Add Task</button>
 
