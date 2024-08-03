@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { useTodoContext } from '../hooks/useTodoContext';
 import TodoForm from './TodoForm'; 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 
 const TodoDetails = ({ todo }) => {
     const { dispatch } = useTodoContext();
     const [isEditing, setIsEditing] = useState(false); 
-    
+
     function formatTime(time24) {
         let [hour, minute] = time24.split(':');
         hour = parseInt(hour);
@@ -16,18 +20,43 @@ const TodoDetails = ({ todo }) => {
     }
 
     const handleClick = async () => {
-        const response = await fetch('/api/todos/' + todo._id, {
-            method: 'DELETE',
+        const result = await MySwal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to delete this task?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel'
         });
 
-        if (response.ok) {
-            console.log('Deleted todo:', todo._id);
-            dispatch({
-                type: 'DELETE_TODO',
-                payload: todo._id, 
+        if (result.isConfirmed) {
+            const response = await fetch('/api/todos/' + todo._id, {
+                method: 'DELETE',
             });
-        } else {
-            console.error('Failed to delete todo:', response);
+
+            if (response.ok) {
+                console.log('Deleted todo:', todo._id);
+                dispatch({
+                    type: 'DELETE_TODO',
+                    payload: todo._id, 
+                });
+
+                await MySwal.fire({
+                    title: 'Deleted!',
+                    text: 'Your task has been deleted.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                console.error('Failed to delete todo:', response);
+
+                await MySwal.fire({
+                    title: 'Error!',
+                    text: 'Failed to delete the task. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
         }
     };
 
