@@ -1,7 +1,21 @@
+
 import { useTodoContext } from '../hooks/useTodoContext';
+// npm install date-fns
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+
+
+  
 
 const TodoDetails = ({ todo }) => {
     const { dispatch } = useTodoContext();
+    
+    function formatTime(time24) {
+        let [hour, minute] = time24.split(':');
+        hour = parseInt(hour);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12 || 12; 
+        return `${hour}:${minute} ${ampm}`;
+    }
 
     const handleClick = async () => {
         const response = await fetch('/api/todos/' + todo._id, {
@@ -20,16 +34,21 @@ const TodoDetails = ({ todo }) => {
         }
     };
 
+    
+
     return (
         <div className="todo-details">
             <h2>{todo.title}</h2>
             <p>
-                {todo.time} -   
+                {formatTime(todo.time)} -   
                 <span
                     className={`taskType ${todo.completed ? 'completed' : 'notCompleted'}`}
                 >
                     {todo.completed ? "Completed" : "Pending"}
                 </span>
+            </p>
+            <p className='time'>
+                {formatDistanceToNow(new Date(todo.createdAt), {addSuffix: true})}
             </p>
             <span className="edit-button">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
