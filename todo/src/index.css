@@ -136,3 +136,8 @@ form button{
     width: 20px;
     height: 20px;
 }
+
+input.error{
+  border: 1px solid var(--error);
+  color: #333;
+}

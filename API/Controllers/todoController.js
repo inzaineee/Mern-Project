@@ -37,6 +37,18 @@ const getSingleTodo = async (req, res) => {
 const createTodo = async (req, res) => {
     const { title, time, completed } = req.body;
 
+    let emptyFields = [];
+
+    if (!title) {
+        emptyFields.push('title');
+    }
+    if(!time) {
+        emptyFields.push('time');
+    }
+    if(emptyFields.length > 0) {
+        return res.status(400).json({ message: 'Please fill in all the fields', emptyFields });
+    }
+
     try {
         const todo = await todoModel.create({ title, time, completed });
         res.status(201).json(todo);

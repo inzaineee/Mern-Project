@@ -9,6 +9,7 @@ const TodoForm = () => {
     const [time, setTime] = useState('');
     const [completed, setCompleted] = useState(false);
     const [error, setError] = useState(null);
+    const [emptyFields, setEmptyFields] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,9 +27,10 @@ const TodoForm = () => {
         const data = await response.json();
         if(!response.ok){
             setError(data.message);
+            setEmptyFields(data.emptyFields);
         }
         if(response.ok){
-            
+            setEmptyFields([]);
             setTitle('');
             setTime('');
             setCompleted(false);
@@ -46,6 +48,7 @@ const TodoForm = () => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                className={emptyFields.includes('title') ? 'error' : ''}
             />
 
             <label>Task Time:</label>
@@ -53,6 +56,7 @@ const TodoForm = () => {
                 type = "time"
                 value = {time}
                 onChange={(e) => setTime(e.target.value)}
+                className={emptyFields.includes('time') ? 'error' : ''}
             />
            
             <button>Add Task</button>
