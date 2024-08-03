@@ -1,70 +1,68 @@
 const todoModel = require('../Models/todoModel');
 const mongoose = require('mongoose');
-// get all todo
-const getTodos = async (req, res) => {
-    try{
-        const todos = await todoModel.find();
-        res.status(200).json({todos});
-    } 
-    catch (error){
-        res.status(400).json({message:error.message});
-    }
-}
 
-// get single todo
+// Get all todos
+const getTodos = async (req, res) => {
+    try {
+        const todos = await todoModel.find();
+        res.status(200).json(todos);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Get a single todo
 const getSingleTodo = async (req, res) => {
     const { id } = req.params;
 
     // Check if the provided ID is valid 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No todo with that id' });
+        return res.status(404).json({ error: 'No todo with that ID' });
     }
 
     try {
         const todo = await todoModel.findById(id);
 
         if (!todo) {
-            return res.status(404).json({ message: 'No todo with that id' });
+            return res.status(404).json({ message: 'No todo with that ID' });
         }
 
-        res.status(200).json({ todo });
+        res.status(200).json(todo);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
-
-
-// create new todo
+// Create a new todo
 const createTodo = async (req, res) => {
-    const {title, time, completed} = req.body;
-    try{
-        const todo = await todoModel.create({title, time, completed});
-        res.status(200).json({todo});
-    }
-    catch (error){
-        res.status(400).json({message:error.message});
-    }
-}
+    const { title, time, completed } = req.body;
 
-// delete todo
+    try {
+        const todo = await todoModel.create({ title, time, completed });
+        res.status(201).json(todo);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Delete a todo
 const deleteTodo = async (req, res) => {
     const { id } = req.params;
 
     // Check if the provided ID is valid
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No todo with that id' });
+        return res.status(404).json({ error: 'No todo with that ID' });
     }
 
-    try{
+    try {
         await todoModel.findByIdAndDelete(id);
-        res.status(200).json({message: 'Todo deleted successfully'});
+        res.status(200).json({ message: 'Todo deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    catch (error){
-        res.status(400).json({message:error.message});
-    }
-}
-// update todo
+};
+
+// Update a todo
 const updateTodo = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
@@ -81,18 +79,16 @@ const updateTodo = async (req, res) => {
             return res.status(404).json({ error: 'No todo with that ID found' });
         }
 
-        res.status(200).json({ todo });
-        
+        res.status(200).json(todo);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
 
-
-module.exports ={
+module.exports = {
     createTodo,
     getTodos,
     getSingleTodo,
     deleteTodo,
     updateTodo
-}
+};
