@@ -49,6 +49,7 @@ userSchema.statics.login = async function (email, password) {
         throw Error('Email and Password are required');
     }
 
+    
     const user = await this.findOne({ email });
     if (!user) {
         throw Error('Invalid Email');
